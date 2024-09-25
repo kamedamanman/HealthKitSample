@@ -19,18 +19,22 @@ class HealthKitManager: ObservableObject {
         let stepType = HKObjectType.quantityType(forIdentifier: .stepCount)!
         let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
         let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
+        
+        // let restingHeartRateType = HKObjectType.quantityType(forIdentifier: .restingHeartRate)!
+        // let physicalEffortType = HKObjectType.quantityType(forIdentifier: .physicalEffort)!
 
         let readTypes: Set = [stepType, heartRateType, sleepType]
-
+        
+        // toShareは書き込み権限
         healthStore.requestAuthorization(toShare: nil, read: readTypes) { (success, error) in
             completion(success, error)
         }
     }
 
-    // 歩数データの取得
+    // 歩数データの取得（0時から現在時刻までの合計）
     func fetchStepCount() {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
-        let startDate = Calendar.current.startOfDay(for: Date())
+        let startDate = Calendar.current.startOfDay(for: Date()) // 今日の0時
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: .strictStartDate)
 
         let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
@@ -43,7 +47,7 @@ class HealthKitManager: ObservableObject {
         healthStore.execute(query)
     }
 
-    // 心拍数データの取得
+    // 心拍数データの取得（0時から現在時刻までの平均）
     func fetchHeartRate() {
         let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
         let startDate = Calendar.current.startOfDay(for: Date())
@@ -59,7 +63,7 @@ class HealthKitManager: ObservableObject {
         healthStore.execute(query)
     }
 
-    // 睡眠データの取得
+    // 睡眠データの取得（1日のinBedの時間）
     func fetchSleepAnalysis() {
         let sleepType = HKCategoryType.categoryType(forIdentifier: .sleepAnalysis)!
         let startDate = Calendar.current.startOfDay(for: Date())
