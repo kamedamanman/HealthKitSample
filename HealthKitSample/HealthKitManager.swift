@@ -1,10 +1,3 @@
-//
-//  HealthKitManager.swift
-//  HealthKitSample
-//
-//  Created by oshima-katsutoshi on 2024/09/25.
-//
-
 import HealthKit
 
 class HealthKitManager: ObservableObject {
@@ -19,13 +12,10 @@ class HealthKitManager: ObservableObject {
         let stepType = HKObjectType.quantityType(forIdentifier: .stepCount)!
         let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
         let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
-        
-        // let restingHeartRateType = HKObjectType.quantityType(forIdentifier: .restingHeartRate)!
-        // let physicalEffortType = HKObjectType.quantityType(forIdentifier: .physicalEffort)!
 
         let readTypes: Set = [stepType, heartRateType, sleepType]
         
-        // toShareは書き込み権限
+        // toShareは書き込み権限のため今回はnil
         healthStore.requestAuthorization(toShare: nil, read: readTypes) { (success, error) in
             completion(success, error)
         }

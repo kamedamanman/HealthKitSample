@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  HealthKitSample
-//
-//  Created by oshima-katsutoshi on 2024/09/25.
-//
-
 import SwiftUI
 
 struct ContentView: View {
